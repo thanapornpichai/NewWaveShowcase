@@ -1,0 +1,5 @@
+D:/NewWaveShowcase/NewWaveShowcase/.utmp/RelWithDebInfo/3z2c5941/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/NewWaveShowcase/NewWaveShowcase/.utmp/RelWithDebInfo/3z2c5941/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+D:/NewWaveShowcase/NewWaveShowcase/.utmp/RelWithDebInfo/3z2c5941/armeabi-v7a/GameActivity/CMakeFiles/game.dir
+D:/NewWaveShowcase/NewWaveShowcase/.utmp/RelWithDebInfo/3z2c5941/armeabi-v7a/GameActivity/CMakeFiles/edit_cache.dir
+D:/NewWaveShowcase/NewWaveShowcase/.utmp/RelWithDebInfo/3z2c5941/armeabi-v7a/GameActivity/CMakeFiles/rebuild_cache.dir
