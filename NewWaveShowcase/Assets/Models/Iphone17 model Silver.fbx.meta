@@ -3,7 +3,97 @@ guid: eef0ef2e44369544c939356b95a4d543
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Camera Lens Glass
+    second: {fileID: 2100000, guid: 578fab321d022cf4dbb48fddecce3f3d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Camera Rings
+    second: {fileID: 2100000, guid: 91cc404594300c647b7683320c99ad7b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Camera lens black part
+    second: {fileID: 2100000, guid: 1435b65c149b13744beb79e164090da2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Camera lens'.001
+    second: {fileID: 2100000, guid: 73658148c62b85e408ceb8cb9a516b34, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dark Sensor thing
+    second: {fileID: 2100000, guid: 1a2b57e2a1d351549bbcfd376e1c5af9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Frosted back glass
+    second: {fileID: 2100000, guid: d860d53f8bcec6249aded385c4dd7812, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 08a706cdb6c09f149a419d2678be4eca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.003
+    second: {fileID: 2100000, guid: 2897b2b1a5f6baa4598695e10b25bb25, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Screen
+    second: {fileID: 2100000, guid: 57f8f6aa44c77254888ce6d2827896ee, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Screen black glossy part
+    second: {fileID: 2100000, guid: fce021536d0cfdc4d946f86c3ba763d0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Titanium -  Pure
+    second: {fileID: 2100000, guid: e8d615357f6838a479ed6e68e0381507, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Titanium - Camera panel
+    second: {fileID: 2100000, guid: da7e4c6016159bc4dafb69bed046847e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Titanium antennae
+    second: {fileID: 2100000, guid: 2e5c16c74fda93e439f6383fef446fe6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Touch screen
+    second: {fileID: 2100000, guid: fc9e4bdb55545cc43b94aca491b9417e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: apple
+    second: {fileID: 2100000, guid: 700cfde16412aef458818fdb64bc32ff, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: iphone 17 speakers
+    second: {fileID: 2100000, guid: 065323073264f194d80815a444e83b43, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: iphone dot
+    second: {fileID: 2100000, guid: 83222d7091720de4487e049b5a2f5a15, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: matte jet black
+    second: {fileID: 2100000, guid: 5a62630eaa9340340abc114eb0f9cc7f, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

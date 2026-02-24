@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -21,24 +22,30 @@ public class PartInfoPopupUI : MonoBehaviour
 
     [Header("Animation (Smooth)")]
     public float slideDuration = 0.75f;
-
     public Ease showEase = Ease.OutQuint;
-
     public Ease hideEase = Ease.InQuint;
-
     public float slideFromOffset = 520f;
-
     [Range(0.1f, 1f)] public float fadeShowRatio = 0.85f;
     [Range(0.1f, 1f)] public float fadeHideRatio = 0.60f;
+
+    [Header("Layout Rebuild (Resize Popup)")]
+    public RectTransform layoutRoot;
+
+    public bool forceRebuildLayout = true;
+
+    public bool rebuildAtEndOfFrame = true;
 
     private Canvas rootCanvas;
     private Vector2 targetAnchoredPos;
 
-    private Sequence seq; 
+    private Sequence seq;
+    private Coroutine rebuildCo;
 
     void Awake()
     {
         rootCanvas = GetComponentInParent<Canvas>();
+
+        if (layoutRoot == null) layoutRoot = popupRect;
 
         if (closeButton != null)
         {
@@ -72,6 +79,17 @@ public class PartInfoPopupUI : MonoBehaviour
             else
             {
                 iconImage.gameObject.SetActive(false);
+            }
+        }
+
+        if (forceRebuildLayout)
+        {
+            ForceRebuildNow();
+
+            if (rebuildAtEndOfFrame)
+            {
+                if (rebuildCo != null) StopCoroutine(rebuildCo);
+                rebuildCo = StartCoroutine(RebuildEndOfFrame());
             }
         }
 
@@ -193,5 +211,26 @@ public class PartInfoPopupUI : MonoBehaviour
     {
         if (clickOutsideToClose)
             Hide();
+    }
+
+    void ForceRebuildNow()
+    {
+        if (titleText != null) titleText.ForceMeshUpdate();
+        if (descText != null) descText.ForceMeshUpdate();
+
+        Canvas.ForceUpdateCanvases();
+
+        if (layoutRoot != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(layoutRoot);
+
+        Canvas.ForceUpdateCanvases();
+    }
+
+    IEnumerator RebuildEndOfFrame()
+    {
+        yield return null;
+
+        ForceRebuildNow();
+        rebuildCo = null;
     }
 }
