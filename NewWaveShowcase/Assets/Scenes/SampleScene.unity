@@ -907,6 +907,7 @@ GameObject:
   - component: {fileID: 224667992}
   - component: {fileID: 224667991}
   - component: {fileID: 224667990}
+  - component: {fileID: 224667993}
   m_Layer: 5
   m_Name: '[Button] - Orange'
   m_TagString: Untagged
@@ -924,7 +925,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1190348977}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1027,6 +1028,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 224667988}
   m_CullTransparentMesh: 1
+--- !u!114 &224667993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224667988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 419098e8234c0644cae3c39910fc5e1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selector: {fileID: 1636295142}
+  colorId: Default
 --- !u!1 &312594985
 GameObject:
   m_ObjectHideFlags: 0
@@ -3109,6 +3124,7 @@ GameObject:
   - component: {fileID: 998479568}
   - component: {fileID: 998479567}
   - component: {fileID: 998479566}
+  - component: {fileID: 998479569}
   m_Layer: 5
   m_Name: '[Button] - Dark'
   m_TagString: Untagged
@@ -3229,6 +3245,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 998479564}
   m_CullTransparentMesh: 1
+--- !u!114 &998479569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998479564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 419098e8234c0644cae3c39910fc5e1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selector: {fileID: 1636295142}
+  colorId: Default
 --- !u!1 &1052579950
 GameObject:
   m_ObjectHideFlags: 0
@@ -5048,6 +5078,7 @@ GameObject:
   - component: {fileID: 1599163214}
   - component: {fileID: 1599163213}
   - component: {fileID: 1599163212}
+  - component: {fileID: 1599163215}
   m_Layer: 5
   m_Name: '[Button] - Silver'
   m_TagString: Untagged
@@ -5168,6 +5199,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599163210}
   m_CullTransparentMesh: 1
+--- !u!114 &1599163215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599163210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 419098e8234c0644cae3c39910fc5e1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selector: {fileID: 1636295142}
+  colorId: Default
 --- !u!1 &1633781670
 GameObject:
   m_ObjectHideFlags: 0
@@ -5315,6 +5360,7 @@ GameObject:
   - component: {fileID: 1636295140}
   - component: {fileID: 1636295139}
   - component: {fileID: 1636295141}
+  - component: {fileID: 1636295142}
   m_Layer: 0
   m_Name: IphoneModel
   m_TagString: Untagged
@@ -5506,6 +5552,30 @@ MonoBehaviour:
       - {fileID: 2100000, guid: 31c716c69201cca4980b579870130684, type: 2}
   startTheme: 1
   currentTheme: 1
+--- !u!114 &1636295142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636295138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6375f0db1034cc64d8942802827395cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customizer: {fileID: 1636295141}
+  partId: Body
+  colorButtons:
+  - {fileID: 224667990}
+  - {fileID: 1599163212}
+  - {fileID: 998479566}
+  startColorId: Default
+  selectedScale: 1.5
+  normalScale: 1
+  useDotween: 1
+  tweenSeconds: 0.2
+  currentSelected: {fileID: 224667990}
 --- !u!1 &1644627401
 GameObject:
   m_ObjectHideFlags: 0
@@ -7054,7 +7124,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2083241019}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

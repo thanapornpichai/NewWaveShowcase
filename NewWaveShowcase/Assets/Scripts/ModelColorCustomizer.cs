@@ -11,13 +11,10 @@ public class ModelColorCustomizer : MonoBehaviour
         public string partId = "Body";
 
         [Header("Targets")]
-        [Tooltip("Renderers ??? part ??? (MeshRenderer / SkinnedMeshRenderer)")]
         public List<Renderer> renderers = new List<Renderer>();
 
-        [Tooltip("??? index ??? material ????????????????? (???? = ??????????????)")]
         public List<int> materialIndices = new List<int>();
 
-        [Tooltip("???? property ???? shader ???? _BaseColor, _Color, _TintColor (???????? = auto detect)")]
         public string colorProperty = "";
 
         [Header("Optional Presets (Swap Materials)")]
@@ -27,16 +24,11 @@ public class ModelColorCustomizer : MonoBehaviour
     [Serializable]
     public class MaterialPreset
     {
-        [Tooltip("???? preset ????????????? ???? Silver / Orange / Dark")]
         public string presetId = "Silver";
 
-        [Tooltip("?????? 1 ??? = ?????? material slot, ????????????? = map ??? index")]
         public List<Material> materials = new List<Material>();
     }
 
-    // -------------------------
-    // Theme (3 colors)
-    // -------------------------
     public enum Theme3
     {
         Silver,
@@ -48,27 +40,18 @@ public class ModelColorCustomizer : MonoBehaviour
     public List<PartTarget> parts = new List<PartTarget>();
 
     [Header("Theme 3 (Preset IDs must match Inspector)")]
-    [Tooltip("??????????????????????")]
     public Theme3 startTheme = Theme3.Silver;
 
     [SerializeField] private Theme3 currentTheme = Theme3.Silver;
 
-    // -------------------------
-    // Internals
-    // -------------------------
     private readonly Dictionary<Renderer, MaterialPropertyBlock> _mpbCache = new Dictionary<Renderer, MaterialPropertyBlock>();
     private static readonly string[] AUTO_COLOR_PROPS = { "_BaseColor", "_Color", "_TintColor" };
 
     private void Awake()
     {
         currentTheme = startTheme;
-        // ??????????????????? preset ????? ????????????????
-        // ApplyTheme(currentTheme);
     }
 
-    // =========================
-    // Public API (Color via MPB)
-    // =========================
     public void SetPartColor(string partId, Color color)
     {
         var part = FindPart(partId);
@@ -137,9 +120,6 @@ public class ModelColorCustomizer : MonoBehaviour
         }
     }
 
-    // =========================
-    // Public API (Swap Materials)
-    // =========================
     public void ApplyMaterialPreset(string partId, string presetId)
     {
         var part = FindPart(partId);
@@ -152,7 +132,7 @@ public class ModelColorCustomizer : MonoBehaviour
         {
             if (r == null) continue;
 
-            var mats = r.materials; // instance materials
+            var mats = r.materials; 
             if (mats == null || mats.Length == 0) continue;
 
             if (preset.materials == null || preset.materials.Count == 0) continue;
@@ -173,16 +153,10 @@ public class ModelColorCustomizer : MonoBehaviour
 
             r.materials = mats;
 
-            // ???? MPB ?????? (????? override ????)
             ClearPropertyBlockAllSlots(r);
         }
     }
 
-    // =========================
-    // Theme (3 preset ids)
-    // =========================
-
-    /// <summary>???????? Silver -> Orange -> Dark -> Silver</summary>
     public void CycleTheme()
     {
         switch (currentTheme)
@@ -193,19 +167,14 @@ public class ModelColorCustomizer : MonoBehaviour
         }
     }
 
-    /// <summary>?????????? UI ????????????????????????</summary>
     public void ApplyThemeSilver() => ApplyTheme(Theme3.Silver);
     public void ApplyThemeOrange() => ApplyTheme(Theme3.Orange);
     public void ApplyThemeDark() => ApplyTheme(Theme3.Dark);
 
-    /// <summary>
-    /// ?????????? part ?????? preset ??? theme
-    /// presetId ?????? "Silver"/"Orange"/"Dark" ??????? enum
-    /// </summary>
     public void ApplyTheme(Theme3 theme)
     {
         currentTheme = theme;
-        string presetId = theme.ToString(); // "Silver","Orange","Dark"
+        string presetId = theme.ToString(); 
 
         for (int i = 0; i < parts.Count; i++)
         {
@@ -216,9 +185,6 @@ public class ModelColorCustomizer : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// ????????????????? string ??? ???? "Silver"
-    /// </summary>
     public void ApplyThemeByPresetId(string presetId)
     {
         if (string.IsNullOrEmpty(presetId)) return;
@@ -232,9 +198,6 @@ public class ModelColorCustomizer : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// ?????????: ??????? tint ??????????? (??????? material)
-    /// </summary>
     public void ApplyTintToAllParts(Color color)
     {
         for (int i = 0; i < parts.Count; i++)
@@ -245,9 +208,6 @@ public class ModelColorCustomizer : MonoBehaviour
         }
     }
 
-    // =========================
-    // Helpers
-    // =========================
     private PartTarget FindPart(string partId)
     {
         return parts.Find(p => p.partId == partId);
