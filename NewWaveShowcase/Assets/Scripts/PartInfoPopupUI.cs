@@ -16,24 +16,39 @@ public class PartInfoPopupUI : MonoBehaviour
     public Button closeButton;
     public bool clickOutsideToClose = true;
 
+    [Header("Rects")]
+    public RectTransform moveRoot;
+
+    public RectTransform layoutRoot;
+
     [Header("Positioning")]
-    public RectTransform popupRect;
     public Vector2 screenOffset = new Vector2(18, 18);
+
+    [Header("Orientation Position References")]
+    public RectTransform landscapeReference;
+    public RectTransform portraitReference;
+
+    [Header("Landscape Override X")]
+    public bool overrideLandscapeX = true;
+
+    public float landscapeTargetX = -1351f;
 
     [Header("Animation (Smooth)")]
     public float slideDuration = 0.75f;
     public Ease showEase = Ease.OutQuint;
     public Ease hideEase = Ease.InQuint;
+
     public float slideFromOffset = 520f;
+
     [Range(0.1f, 1f)] public float fadeShowRatio = 0.85f;
     [Range(0.1f, 1f)] public float fadeHideRatio = 0.60f;
 
     [Header("Layout Rebuild (Resize Popup)")]
-    public RectTransform layoutRoot;
-
     public bool forceRebuildLayout = true;
-
     public bool rebuildAtEndOfFrame = true;
+
+    [Header("Debug")]
+    public bool debugLog = false;
 
     private Canvas rootCanvas;
     private Vector2 targetAnchoredPos;
@@ -41,11 +56,24 @@ public class PartInfoPopupUI : MonoBehaviour
     private Sequence seq;
     private Coroutine rebuildCo;
 
+    private bool IsLandscape => Screen.width > Screen.height;
+
+    public bool IsOpen
+    {
+        get
+        {
+            return canvasGroup != null &&
+                   canvasGroup.alpha > 0.9f &&
+                   canvasGroup.blocksRaycasts;
+        }
+    }
+
     void Awake()
     {
         rootCanvas = GetComponentInParent<Canvas>();
 
-        if (layoutRoot == null) layoutRoot = popupRect;
+        if (moveRoot == null) moveRoot = GetComponent<RectTransform>();
+        if (layoutRoot == null) layoutRoot = moveRoot;
 
         if (closeButton != null)
         {
@@ -56,11 +84,6 @@ public class PartInfoPopupUI : MonoBehaviour
 
         HideInstant();
     }
-
-    public bool IsOpen =>
-        canvasGroup != null &&
-        canvasGroup.alpha > 0.9f &&
-        canvasGroup.blocksRaycasts;
 
     public void Show(PartInfo info, Vector2 screenPos)
     {
@@ -76,10 +99,7 @@ public class PartInfoPopupUI : MonoBehaviour
                 iconImage.gameObject.SetActive(true);
                 iconImage.sprite = info.icon;
             }
-            else
-            {
-                iconImage.gameObject.SetActive(false);
-            }
+            else iconImage.gameObject.SetActive(false);
         }
 
         if (forceRebuildLayout)
@@ -93,31 +113,76 @@ public class PartInfoPopupUI : MonoBehaviour
             }
         }
 
-        if (popupRect != null && rootCanvas != null)
+        ResolveTargetPosition(screenPos);
+
+        if (debugLog)
         {
-            RectTransform canvasRect = rootCanvas.transform as RectTransform;
-
-            Camera uiCam =
-                rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay
-                    ? null
-                    : rootCanvas.worldCamera;
-
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                canvasRect,
-                screenPos + screenOffset,
-                uiCam,
-                out Vector2 localPos
-            );
-
-            targetAnchoredPos = localPos;
+            Debug.Log($"[PartInfoPopupUI] IsLandscape={IsLandscape} targetAnchoredPos={targetAnchoredPos}");
         }
 
         PlayShowAnimation();
     }
 
-    public void Hide()
+    public void Hide() => PlayHideAnimation();
+
+    private Vector2 GetAnchoredPosFromReference(RectTransform reference)
     {
-        PlayHideAnimation();
+        if (reference == null || moveRoot == null || rootCanvas == null)
+            return Vector2.zero;
+
+        RectTransform parentRect = moveRoot.parent as RectTransform;
+        if (parentRect == null)
+            return moveRoot.anchoredPosition;
+
+        Camera uiCam =
+            rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : rootCanvas.worldCamera;
+
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(uiCam, reference.position);
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            parentRect,
+            screenPoint,
+            uiCam,
+            out Vector2 localPoint
+        );
+
+        return localPoint;
+    }
+
+    private void ResolveTargetPosition(Vector2 screenPos)
+    {
+        if (moveRoot == null || rootCanvas == null) return;
+
+        bool landscape = IsLandscape;
+
+        if (landscape && landscapeReference != null)
+        {
+            targetAnchoredPos = GetAnchoredPosFromReference(landscapeReference);
+
+            if (overrideLandscapeX)
+                targetAnchoredPos.x = landscapeTargetX;
+
+            return;
+        }
+
+        if (!landscape && portraitReference != null)
+        {
+            targetAnchoredPos = GetAnchoredPosFromReference(portraitReference);
+            return;
+        }
+
+        RectTransform canvasRect = rootCanvas.transform as RectTransform;
+        Camera uiCam =
+            rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : rootCanvas.worldCamera;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPos + screenOffset,
+            uiCam,
+            out Vector2 localPos
+        );
+
+        targetAnchoredPos = localPos;
     }
 
     void HideInstant()
@@ -134,19 +199,28 @@ public class PartInfoPopupUI : MonoBehaviour
         if (closeButton != null)
             closeButton.gameObject.SetActive(false);
 
-        if (popupRect != null)
+        if (moveRoot != null)
         {
-            popupRect.anchoredPosition = new Vector2(Screen.width, 0);
+            moveRoot.anchoredPosition = new Vector2(Screen.width, 0);
         }
     }
 
     void PlayShowAnimation()
     {
-        if (popupRect == null || canvasGroup == null) return;
+        if (moveRoot == null || canvasGroup == null) return;
 
         KillSeq();
 
-        popupRect.anchoredPosition = targetAnchoredPos + new Vector2(slideFromOffset, 0);
+        Vector2 endPos;
+        if (IsLandscape)
+            endPos = new Vector2(landscapeTargetX, moveRoot.anchoredPosition.y);
+        else
+            endPos = new Vector2(0f, moveRoot.anchoredPosition.y);
+
+        float dir = IsLandscape ? -1f : 1f;
+        Vector2 fromPos = endPos + new Vector2(slideFromOffset * dir, 0);
+
+        moveRoot.anchoredPosition = fromPos;
 
         canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = true;
@@ -156,38 +230,32 @@ public class PartInfoPopupUI : MonoBehaviour
             closeButton.gameObject.SetActive(true);
 
         seq = DOTween.Sequence();
-
-        seq.Join(
-            popupRect.DOAnchorPos(targetAnchoredPos, slideDuration)
-                .SetEase(showEase)
-        );
-
-        seq.Join(
-            canvasGroup.DOFade(1f, slideDuration * fadeShowRatio)
-                .SetEase(Ease.OutSine)
-        );
+        seq.Join(moveRoot.DOAnchorPos(endPos, slideDuration).SetEase(showEase));
+        seq.Join(canvasGroup.DOFade(1f, slideDuration * fadeShowRatio).SetEase(Ease.OutSine));
     }
 
     void PlayHideAnimation()
     {
-        if (popupRect == null || canvasGroup == null) return;
+        if (moveRoot == null || canvasGroup == null) return;
 
         KillSeq();
 
         canvasGroup.blocksRaycasts = false;
         canvasGroup.interactable = false;
 
+        Vector2 endPos;
+        if (IsLandscape)
+            endPos = new Vector2(landscapeTargetX, moveRoot.anchoredPosition.y);
+        else
+            endPos = new Vector2(0f, moveRoot.anchoredPosition.y);
+
+        float dir = IsLandscape ? -1f : 1f;
+        Vector2 toPos = endPos + new Vector2(slideFromOffset * dir, 0);
+
         seq = DOTween.Sequence();
 
-        seq.Join(
-            popupRect.DOAnchorPos(targetAnchoredPos + new Vector2(slideFromOffset, 0), slideDuration)
-                .SetEase(hideEase)
-        );
-
-        seq.Join(
-            canvasGroup.DOFade(0f, slideDuration * fadeHideRatio)
-                .SetEase(Ease.InSine)
-        );
+        seq.Join(moveRoot.DOAnchorPos(toPos, slideDuration).SetEase(hideEase));
+        seq.Join(canvasGroup.DOFade(0f, slideDuration * fadeHideRatio).SetEase(Ease.InSine));
 
         seq.OnComplete(() =>
         {
@@ -203,7 +271,7 @@ public class PartInfoPopupUI : MonoBehaviour
 
         seq = null;
 
-        if (popupRect != null) popupRect.DOKill();
+        if (moveRoot != null) moveRoot.DOKill();
         if (canvasGroup != null) canvasGroup.DOKill();
     }
 
@@ -229,7 +297,6 @@ public class PartInfoPopupUI : MonoBehaviour
     IEnumerator RebuildEndOfFrame()
     {
         yield return null;
-
         ForceRebuildNow();
         rebuildCo = null;
     }
